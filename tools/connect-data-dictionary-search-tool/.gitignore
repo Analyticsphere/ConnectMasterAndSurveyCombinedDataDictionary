@@ -1,1 +1,7 @@
-
+data/*.xlsx
+data/*.tmp
+data/connect_dictionary_index.json
+data/workbook_metadata.json
+library/connect_reference_library.json
+__pycache__/
+.DS_Store
