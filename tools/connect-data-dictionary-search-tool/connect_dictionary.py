@@ -115,6 +115,36 @@ def now_iso() -> str:
     return dt.datetime.now().astimezone().isoformat(timespec="seconds")
 
 
+def format_mmddyyyy(value: str) -> str:
+    text = str(value).strip()
+    if not text:
+        return ""
+
+    if re.fullmatch(r"\d+(\.\d+)?", text):
+        serial = float(text)
+        if 1 <= serial <= 100000:
+            date = dt.datetime(1899, 12, 30) + dt.timedelta(days=serial)
+            return date.strftime("%m/%d/%Y")
+
+    for date_format in (
+        "%m/%d/%Y",
+        "%m/%d/%y",
+        "%m-%d-%Y",
+        "%m-%d-%y",
+        "%Y-%m-%d",
+        "%Y-%m-%d %H:%M:%S",
+    ):
+        try:
+            return dt.datetime.strptime(text, date_format).strftime("%m/%d/%Y")
+        except ValueError:
+            pass
+
+    try:
+        return dt.datetime.fromisoformat(text.replace("Z", "+00:00")).strftime("%m/%d/%Y")
+    except ValueError:
+        return text
+
+
 def ensure_dirs() -> None:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     LIBRARY_DIR.mkdir(parents=True, exist_ok=True)
@@ -528,7 +558,7 @@ def print_record(record: dict[str, Any], score: float | None = None, rank: int |
         print(f"   {STATUS_FIELD}: {status}")
     status_date = get_cell_field(record, STATUS_DATE_FIELD)
     if status_date:
-        print(f"   {STATUS_DATE_FIELD}: {status_date}")
+        print(f"   {STATUS_DATE_FIELD}: {format_mmddyyyy(status_date)}")
     gcp_document_table = get_field(record, "GCP Document/Table")
     if gcp_document_table:
         print(f"   GCP Document/Table: {gcp_document_table}")
@@ -581,7 +611,7 @@ def library_entry_from_record(
         "source": source_line(record),
         "gcp_document_table": get_field(record, "GCP Document/Table"),
         "status": get_cell_field(record, STATUS_FIELD),
-        "status_date": get_cell_field(record, STATUS_DATE_FIELD),
+        "status_date": format_mmddyyyy(get_cell_field(record, STATUS_DATE_FIELD)),
         "pii": get_field(record, "PII"),
         "sheet": record["sheet"],
         "row": record["row"],
@@ -630,7 +660,7 @@ def print_library_entry(entry: dict[str, Any]) -> None:
     if entry.get("status"):
         print(f"   {STATUS_FIELD}: {entry['status']}")
     if entry.get("status_date"):
-        print(f"   {STATUS_DATE_FIELD}: {entry['status_date']}")
+        print(f"   {STATUS_DATE_FIELD}: {format_mmddyyyy(entry['status_date'])}")
     if entry.get("pii"):
         print(f"   PII: {entry['pii']}")
     if entry.get("note"):
