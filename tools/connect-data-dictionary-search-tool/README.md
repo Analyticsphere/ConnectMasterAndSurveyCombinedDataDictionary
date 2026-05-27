@@ -71,54 +71,149 @@ The data dictionary itself contains variable metadata, not participant-level dat
 
 ---
 
+## Getting the Tool
+
+Before using the tool, the user needs a local copy of the GitHub folder that contains `connect_dictionary.py`.
+
+### Option 1: Get the Tool From Terminal
+
+1. Open the Mac Terminal app.
+2. Go to the folder where the repository should be saved. Example:
+
+```bash
+cd ~/Documents
+```
+
+3. Copy and paste this command:
+
+```bash
+git clone https://github.com/Analyticsphere/ConnectMasterAndSurveyCombinedDataDictionary.git
+```
+
+4. Go to the tool folder:
+
+```bash
+cd ConnectMasterAndSurveyCombinedDataDictionary/tools/connect-data-dictionary-search-tool
+```
+
+5. Confirm the tool file is present:
+
+```bash
+ls
+```
+
+The folder should include `connect_dictionary.py`, `README.md`, `data`, and `library`.
+
+### Option 2: Get the Tool From the GitHub Page
+
+1. Open the GitHub tool page:
+   <https://github.com/Analyticsphere/ConnectMasterAndSurveyCombinedDataDictionary/tree/main/tools/connect-data-dictionary-search-tool>
+2. Click `Code`.
+3. Click `Download ZIP`.
+4. Unzip the downloaded file.
+5. Open this folder inside the unzipped repository:
+
+```text
+ConnectMasterAndSurveyCombinedDataDictionary-main/tools/connect-data-dictionary-search-tool
+```
+
+The user does not need to manually download the Excel data dictionary. The tool downloads and indexes the workbook when it runs.
+
+---
+
 ## Instructions for Use
 
 The Connect Data Dictionary Search Tool can be used in several ways, depending on how someone prefers to work. The main file is `connect_dictionary.py`.
 
-### Use Through Codex
+### Use Through Mac Terminal
 
-The easiest way to use the tool is through Codex. A user can ask questions in plain language, such as:
-
-- What is the CID for self-reported sex?
-- Look up CID 905787778.
-- Find variables related to HIPAA revocation.
-- Show the response options and GCP location for this variable.
-
-Codex can run the search tool, pull the latest version of the Connect Data Dictionary from GitHub, and return the relevant information in a readable format.
-
-### Use Through VSCode
-
-Users who are comfortable opening a folder in VSCode can run the tool from the built-in terminal.
-
-Open the tool folder in VSCode, then go to:
-
-```text
-Terminal > New Terminal
-```
-
-Example searches:
+1. Open the Mac Terminal app.
+2. Go to the tool folder. If the repository was saved in `Documents` using `git clone`, use:
 
 ```bash
-python3 connect_dictionary.py cid "self reported sex"
+cd ~/Documents/ConnectMasterAndSurveyCombinedDataDictionary/tools/connect-data-dictionary-search-tool
 ```
 
+3. Confirm Python 3 is available:
+
 ```bash
-python3 connect_dictionary.py search "HIPAA revocation"
+python3 --version
 ```
+
+4. Refresh the data dictionary:
+
+```bash
+python3 connect_dictionary.py refresh
+```
+
+5. Run a lookup by CID:
 
 ```bash
 python3 connect_dictionary.py cid 905787778
 ```
 
-### Use Through Mac Terminal
+6. Or run a keyword search:
 
-The tool can also be run from the Mac Terminal app. Navigate to the folder that contains `connect_dictionary.py`, then run a search command.
+```bash
+python3 connect_dictionary.py search "HIPAA revocation"
+```
 
-Example:
+7. Or search for the best CID match from plain language:
+
+```bash
+python3 connect_dictionary.py cid "self reported sex"
+```
+
+### Use Through VSCode
+
+1. Open VSCode.
+2. Go to `File > Open Folder`.
+3. Select the `connect-data-dictionary-search-tool` folder.
+4. Open the VSCode terminal:
+
+```text
+Terminal > New Terminal
+```
+
+5. Refresh the data dictionary:
+
+```bash
+python3 connect_dictionary.py refresh
+```
+
+6. Search for a term:
 
 ```bash
 python3 connect_dictionary.py search "verification date"
 ```
+
+7. Look up a CID:
+
+```bash
+python3 connect_dictionary.py cid 905787778
+```
+
+8. Look up the best CID match from plain language:
+
+```bash
+python3 connect_dictionary.py cid "self reported sex"
+```
+
+### Use Through Codex
+
+1. Open Codex.
+2. Open the folder that contains `connect_dictionary.py`.
+3. Ask Codex to use the local tool. Example:
+
+```text
+Use connect_dictionary.py to look up CID 905787778.
+Refresh the workbook first.
+Return the matched label/question, CID/state attribute, source context, row location, PII flag, GCP Document/Table, Deprecated/New/Revised status, and production date if available.
+```
+
+4. If Codex asks for permission to access GitHub, approve it so the tool can refresh the workbook.
+
+Codex can run the search tool, pull the latest version of the Connect Data Dictionary from GitHub, and return the relevant information in a readable format.
 
 ### Refresh the Data Dictionary
 
